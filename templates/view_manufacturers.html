@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр производителей</title>
+</head>
+
+<body>
+    <h1>Производители:</h1>
+    <form action="{{ url_for('view_manufacturers') }}" method="get">
+        <input type="text" name="search" placeholder="Поиск по названию">
+        <input type="submit" value="Найти">
+        <br>
+        <label>Сортировать по:</label>
+        <select name="sort_by">
+            <option value="">ID производителя (по умолчанию)</option>
+            <option value="manufacturer_name" {% if sort_by=='manufacturer_name' %}selected{% endif %}>Названию
+                производителя</option>
+        </select>
+        <input type="submit" value="Применить">
+        <br>
+        <a href="{{ url_for('index') }}">Назад в меню</a>
+    </form>
+    <table>
+        {% if manufacturers %}
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+            </tr>
+        </thead>
+        {% endif %}
+        <tbody>
+            {% if search_term %}
+            <p>Результаты поиска для "{{ search_term }}":</p>
+            {% for manufacturer in manufacturers %}
+            <tr>
+                <td>{{ manufacturer.manufacturer_id }}</td>
+                <td>{{ manufacturer.manufacturer_name }}</td>
+            </tr>
+            {% else %}
+            <p>Ничего не найдено.</p>
+            <a href="{{ url_for('view_manufacturers') }}">Показать всех производителей</a>
+            {% endfor %}
+            {% else %}
+            {% if manufacturers %}
+            {% for manufacturer in manufacturers %}
+            <tr>
+                <td>{{ manufacturer.manufacturer_id }}</td>
+                <td>{{ manufacturer.manufacturer_name }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="2">Ничего не найдено.</td>
+            </tr>
+            {% endif %}
+            {% endif %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('index') }}">Назад в меню</a>
+</body>
+
+</html>
