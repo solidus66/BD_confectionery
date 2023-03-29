@@ -12,9 +12,6 @@ from models import *
 #   возможность добавлять/убирать теги (wrapper);
 
 
-
-
-
 @app.route('/')
 def index():
     products = Product.query.all()
