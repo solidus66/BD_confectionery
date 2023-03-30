@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Изменение производителя</title>
+</head>
+<body>
+    <h1>Изменение производителя</h1>
+    <form method="POST" action="{{ url_for('update_manufacturer', manufacturer_id=manufacturer.manufacturer_id) }}">
+        <label for="name">Название производителя:</label>
+        <input type="text" name="name" id="name" value="{{ manufacturer.name }}" required>
+        <button type="submit">Сохранить</button>
+        <button type="button" onclick="location.href='{{ url_for('view_manufacturers') }}'">Отмена</button>
+    </form>
+    <br>
+    <a href="{{ url_for('view_manufacturers') }}">Назад к списку производителей</a>
+</body>
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <meta charset="utf-8">-->
+<!--    <title>Изменение производителя</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h1>Изменение производителя</h1>-->
+<!--    <form id="edit-manufacturer-form" method="POST" action="{{ url_for('update_manufacturer', manufacturer_id=manufacturer.manufacturer_id) }}">-->
+<!--        {{ csrf_token() }}-->
+<!--        <label for="name">Название производителя:</label>-->
+<!--        <input type="text" name="name" id="name" value="{{ manufacturer.name }}" required>-->
+<!--        <button type="submit">Сохранить</button>-->
+<!--        <button type="button" onclick="location.href='{{ url_for('view_manufacturers') }}'">Отмена</button>-->
+<!--    </form>-->
+<!--    <br>-->
+<!--    <a href="{{ url_for('view_manufacturers') }}">Назад к списку производителей</a>-->
+
+<!--    <script>-->
+<!--        function updateManufacturer() {-->
+<!--            const form = document.getElementById('edit-manufacturer-form');-->
+<!--            const url = form.action;-->
+<!--            const formData = new FormData(form);-->
+<!--            const xhr = new XMLHttpRequest();-->
+<!--            xhr.open('PUT', url);-->
+<!--            xhr.onload = function() {-->
+<!--                if (xhr.status === 200) {-->
+<!--                    window.location.href = "{{ url_for('view_manufacturers') }}";-->
+<!--                } else {-->
+<!--                    alert('Произошла ошибка при сохранении данных производителя.');-->
+<!--                }-->
+<!--            };-->
+<!--            xhr.send(formData);-->
+<!--        }-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
