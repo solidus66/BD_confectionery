@@ -1,5 +1,5 @@
 Jinja2
-SQLAlchemy
+SQLAlchemy<2.0
 Flask
 Flask-Login
 Flask-SQLAlchemy
