@@ -7,6 +7,7 @@
 </head>
 
 <body>
+    <a href="{{ url_for('index') }}">Назад в меню</a>
     <h1>Продукция:</h1>
     <form action="{{ url_for('view_products') }}" method="get">
         <input type="text" name="search" placeholder="Поиск по названию">
@@ -15,7 +16,7 @@
         <label>Сортировать по:</label>
         <select name="sort_by">
             <option value="">ID продукта (по умолчанию)</option>
-            <option value="product_name" {% if sort_by=='product_name' %}selected{% endif %}>Названию продукта</option>
+            <option value="product_name" {% if sort_by=='product_name' %}selected{% endif %}>Названию продукции</option>
             <option value="manufacturer_name" {% if sort_by=='manufacturer_name' %}selected{% endif %}>Имени
                 производителя</option>
             <option value="product_price_asc" {% if sort_by=='product_price_asc' %}selected{% endif %}>Цене (по
@@ -25,7 +26,8 @@
         </select>
         <input type="submit" value="Применить">
         <br>
-        <a href="{{ url_for('index') }}">Назад в меню</a>
+        <a href="{{ url_for('add_product') }}">Добавить продукцию</a>
+        <br>
     </form>
     <table>
         {% if products %}
@@ -60,6 +62,9 @@
                 <td>{{ product.manufacturer.manufacturer_name }}</td>
                 <td>{{ product.product_name }}</td>
                 <td>{{ product.product_price }}</td>
+                <td>
+                    <button type="button" onclick="deleteProduct({{ product.product_id }})">Удалить</button>
+                </td>
             </tr>
             {% endfor %}
             {% else %}
@@ -71,6 +76,23 @@
         </tbody>
     </table>
     <a href="{{ url_for('index') }}">Назад в меню</a>
-</body>
 
-</html>
+<script>
+function deleteProduct(product_id) {
+    if (confirm('Вы уверены, что хотите удалить этот продукт?')) {
+        fetch(`/delete_product/${product_id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            window.location.reload();
+        })
+        .catch(error => alert(`Произошла ошибка: ${error}`));
+    }
+}
+</script>
