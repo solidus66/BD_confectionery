@@ -7,32 +7,28 @@
 </head>
 
 <body>
-    <h1>Добавление продукции:</h1>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    <form action="{{ url_for('add_product') }}" method="post">
-        <label>Название продукта:</label>
-        <input type="text" name="product_name" value="{{ form.product_name }}"><br>
-        <label>Цена продукта:</label>
-<!--        <input type="text" name="product_price" value="{{ form.product_price }}"><br>-->
-        <input type="numeric" id="product_price" name="product_price" required min="0"><br>
+    <a href="{{ url_for('view_products') }}">Назад к списку продукции</a>
+    <h1>Добавить продукцию</h1>
+    <form method="post">
+        <label for="product_name">Название продукции:</label>
+        <input type="text" id="product_name" name="product_name" required>
+        <br>
+        <br>
+        <label>Цена продукции:</label>
+        <input type="numeric" id="product_price" name="product_price" required min="0">
+        <br>
+        <br>
         <label>Производитель:</label>
         <select name="manufacturer_id">
             {% for manufacturer in manufacturers %}
-            <option value="{{ manufacturer.manufacturer_id }}" {% if manufacturer.manufacturer_id == form.manufacturer_id %}selected{% endif %}>{{ manufacturer.manufacturer_id }} - {{ manufacturer.manufacturer_name }}</option>
+            <option value="{{ manufacturer.manufacturer_id }}" {% if manufacturer.manufacturer_id==form.manufacturer_id
+                %}selected{% endif %}>{{ manufacturer.manufacturer_id }} - {{ manufacturer.manufacturer_name }}</option>
             {% endfor %}
-        </select><br>
+        </select>
+        <br>
+        <br>
         <input type="submit" value="Добавить">
     </form>
-    <br>
-    <a href="{{ url_for('view_products') }}">Назад к списку продукции</a>
 </body>
 
 </html>
