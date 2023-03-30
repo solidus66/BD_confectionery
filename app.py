@@ -1,21 +1,23 @@
 from os import abort
 
 from flask import render_template, request, redirect, url_for, jsonify, flash
-from flask_wtf import CSRFProtect
-from sqlalchemy import or_
-from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+
 from models import *
 
-# csrf = CSRFProtect(app)
+
+class ManufacturerForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 
 # TODO:
-#   реализовать добавление/удаление прямо со страницы просмотра продуктов;
-#   реализовать на каждой из страниц кнопку «Изменить» для изменения производителей/продуктов
+#   реализовать на каждой из страниц кнопку «Изменить» для изменения производителей/продуктов;
+#   возможность добавлять/убирать теги (wrapper, wrapper color);
 #   .
-#   возможность добавлять/убирать теги (wrapper);
-#   .
-#   доработать закомментированное изменение производителя
+#   нужно спросить про автодискремент при удалении продукции/производителя из БД;
 
 
 @app.route('/')
@@ -58,7 +60,7 @@ def add_manufacturer():
     return render_template('add_manufacturer.html', form=form)
 
 
-# ALTER SEQUENCE manufacturer_manufacturer_id_seq RESTART WITH 110;
+# ALTER SEQUENCE manufacturer_manufacturer_id_seq RESTART WITH 111;
 @app.route('/delete_manufacturer/<int:manufacturer_id>', methods=['POST'])
 def delete_manufacturer(manufacturer_id):
     manufacturer = Manufacturer.query.get(manufacturer_id)
@@ -69,35 +71,6 @@ def delete_manufacturer(manufacturer_id):
     db.session.commit()
 
     return '', 204
-
-
-# @app.route('/manufacturers/<int:manufacturer_id>/edit', methods=['GET', 'POST'])
-# def edit_manufacturer(manufacturer_id):
-#     # Получить производителя из базы данных по id
-#     manufacturer = Manufacturer.query.get(manufacturer_id)
-#
-#     # Если метод запроса POST, обновить данные производителя
-#     if request.method == 'POST':
-#         manufacturer.name = request.form.get('name')
-#         db.session.commit()
-#         return redirect(url_for('view_manufacturers'))
-#
-#     # Передать производителя в шаблон edit_manufacturer.html для отображения формы редактирования
-#     return render_template('edit_manufacturers.html', manufacturer=manufacturer)
-#
-#
-# @app.route('/manufacturers/<int:manufacturer_id>', methods=['PUT'])
-# def update_manufacturer(manufacturer_id):
-#     # Получить производителя из базы данных по id
-#     manufacturer = Manufacturer.query.get(manufacturer_id)
-#     if not manufacturer:
-#         abort(404)
-#     # Обновить данные производителя
-#     manufacturer.name = request.form.get('name')
-#     # Сохранить изменения в базе данных
-#     db.session.commit()
-#     # Вернуть ответ с кодом 200
-#     return '', 200
 
 
 @app.route('/view_products', methods=['GET', 'POST'])
@@ -123,13 +96,47 @@ def view_products():
         products = Product.query.filter(Product.product_name.like(f"%{search_term}%")).all()
 
     if not products:
-        # Если после фильтрации и сортировки ничего не найдено, выводим сообщение об этом
         message = 'Ничего не найдено.'
     else:
         message = ''
 
     return render_template('view_products.html', products=products, search_term=search_term, sort_by=sort_by,
                            message=message)
+
+
+@app.route('/product/add', methods=['GET', 'POST'])
+def add_product():
+    form = {"product_name": "", "product_price": "", "manufacturer_id": "", "submit": False}
+    if request.method == 'POST':
+        form["product_name"] = request.form['product_name']
+        form["product_price"] = request.form['product_price']
+        form["manufacturer_id"] = request.form['manufacturer_id']
+        form["submit"] = True
+
+        if form["product_name"] and form["product_price"] and form["manufacturer_id"]:
+            product = Product(product_name=form["product_name"], product_price=form["product_price"],
+                              manufacturer_id=form["manufacturer_id"])
+            db.session.add(product)
+            db.session.commit()
+
+            flash('Product added successfully!', 'success')
+            return redirect(url_for('view_products'))
+
+    manufacturers = Manufacturer.query.all()
+    return render_template('add_product.html', form=form, manufacturers=manufacturers)
+
+
+# ALTER SEQUENCE product_product_id_seq RESTART WITH 1061;
+@app.route('/delete_product/<int:product_id>', methods=['POST'])
+def delete_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        abort(404)
+
+    db.session.delete(product)
+    db.session.commit()
+
+    return '', 204
 
 
 @app.route('/ajax_example', methods=['POST'])
