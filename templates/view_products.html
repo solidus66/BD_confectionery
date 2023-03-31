@@ -13,6 +13,7 @@
         <input type="text" name="search" placeholder="Поиск по названию">
         <input type="submit" value="Найти">
         <br>
+        <br>
         <label>Сортировать по:</label>
         <select name="sort_by">
             <option value="">ID продукции (по умолчанию)</option>
@@ -26,17 +27,20 @@
         </select>
         <input type="submit" value="Применить">
         <br>
+        <br>
         <a href="{{ url_for('add_product') }}">Добавить продукцию</a>
+        <br>
         <br>
     </form>
     <table>
         {% if products %}
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Имя производителя</th>
-                <th>Название</th>
-                <th>Цена</th>
+                <th style="border: 4px solid white;">ID</th>
+                <th style="border: 3px solid white;">ID и Имя производителя</th>
+                <th style="border: 4px solid white;">Название</th>
+                <th style="border: 4px solid white;">Цена</th>
+                <th style="border: 4px solid white;">Действия</th>
             </tr>
         </thead>
         {% endif %}
@@ -59,11 +63,11 @@
             {% if products %}
             {% for product in products %}
             <tr>
-                <td>{{ product.product_id }}</td>
-                <td>{{ product.manufacturer.manufacturer_name }}</td>
-                <td>{{ product.product_name }}</td>
-                <td>{{ product.product_price }}</td>
-                <td>
+                <td style="border: 4px solid white;">{{ product.product_id }}</td>
+                <td style="border: 4px solid white;">{{ product.manufacturer_id }} - {{ product.manufacturer.manufacturer_name }}</td>
+                <td style="border: 4px solid white;">{{ product.product_name }}</td>
+                <td style="border: 4px solid white;">{{ product.product_price }}</td>
+                <td style="border: 4px solid white;">
                     <button type="button" onclick="deleteProduct({{ product.product_id }})">Удалить</button>
                 </td>
             </tr>
