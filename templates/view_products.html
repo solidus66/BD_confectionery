@@ -15,7 +15,7 @@
         <br>
         <label>Сортировать по:</label>
         <select name="sort_by">
-            <option value="">ID продукта (по умолчанию)</option>
+            <option value="">ID продукции (по умолчанию)</option>
             <option value="product_name" {% if sort_by=='product_name' %}selected{% endif %}>Названию продукции</option>
             <option value="manufacturer_name" {% if sort_by=='manufacturer_name' %}selected{% endif %}>Имени
                 производителя</option>
@@ -49,6 +49,7 @@
                 <td>{{ product.manufacturer.manufacturer_name }}</td>
                 <td>{{ product.product_name }}</td>
                 <td>{{ product.product_price }}</td>
+<!--                <td>{{ product.wrapper.color.name }}</td>-->
             </tr>
             {% else %}
             <p>Ничего не найдено.</p>

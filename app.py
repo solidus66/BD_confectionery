@@ -17,9 +17,14 @@ class ManufacturerForm(FlaskForm):
 #   реализовать на каждой из страниц кнопку «Изменить» для изменения производителей/продуктов;
 #   возможность добавлять/убирать теги (wrapper, wrapper color);
 
+# flask db init
+# flask db migrate
+# flask db upgrade
+# ERROR: возникла проблема при попытке migrate
+
 # ERROR:
-#  список продукции, что не так с ID 1063, 1064 и тд, по всем параметрам сортируется, но добавляются в начале списка
 #  нужно спросить про автодискремент(?) при удалении продукции/производителя из БД;
+#  решить, как быть с удалением производителей у которого есть продукция. Сейчас не удаляется, выдает ошибку;
 
 @app.route('/')
 def index():
@@ -35,6 +40,9 @@ def view_manufacturers():
         manufacturers = Manufacturer.query.filter(Manufacturer.manufacturer_name.ilike(f'%{search_term}%')).all()
     else:
         manufacturers = Manufacturer.query.all()
+
+    if not search_term and not sort_by:
+        manufacturers = Manufacturer.query.order_by(Manufacturer.manufacturer_id).all()
 
     if sort_by == 'manufacturer_name':
         manufacturers = sorted(Manufacturer.query.all(), key=lambda m: m.manufacturer_name.lower())
@@ -66,7 +74,7 @@ def add_manufacturer():
 def delete_manufacturer(manufacturer_id):
     manufacturer = Manufacturer.query.get(manufacturer_id)
     if not manufacturer:
-        abort(404)
+        abort()
 
     db.session.delete(manufacturer)
     db.session.commit()
@@ -80,7 +88,7 @@ def view_products():
     sort_by = request.args.get('sort_by')
 
     if not search_term and not sort_by:
-        products = Product.query.all()
+        products = Product.query.order_by(Product.product_id).all()
     elif sort_by == 'product_name':
         products = Product.query.filter(Product.product_name.like(f"%{search_term}%")).order_by(
             Product.product_name).all()
@@ -127,7 +135,7 @@ def add_product():
     return render_template('add_product.html', form=form, manufacturers=manufacturers)
 
 
-# ALTER SEQUENCE product_product_id_seq RESTART WITH 1061;
+# ALTER SEQUENCE product_product_id_seq RESTART WITH 1067;
 @app.route('/delete_product/<int:product_id>', methods=['POST'])
 def delete_product(product_id):
     product = Product.query.get(product_id)
