@@ -13,6 +13,7 @@
         <input type="text" name="search" placeholder="Поиск по названию">
         <input type="submit" value="Найти">
         <br>
+        <br>
         <label>Сортировать по:</label>
         <select name="sort_by">
             <option value="">ID производителя (по умолчанию)</option>
@@ -21,15 +22,18 @@
         </select>
         <input type="submit" value="Применить">
         <br>
+        <br>
         <a href="{{ url_for('add_manufacturer') }}">Добавить производителя</a>
+        <br>
+        <br>
     </form>
     <table>
         {% if manufacturers %}
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>Действия</th>
+                <th style="border: 4px solid white;">ID</th>
+                <th style="border: 4px solid white;">Название</th>
+                <th style="border: 4px solid white;">Действия</th>
             </tr>
         </thead>
         {% endif %}
@@ -39,15 +43,9 @@
             {% endif %}
             {% for manufacturer in manufacturers %}
             <tr>
-                <td>{{ manufacturer.manufacturer_id }}</td>
-                <td>
-                    {% if manufacturer.edit %}
-                    <input type="text" name="manufacturer_name" value="{{ manufacturer.manufacturer_name }}">
-                    {% else %}
-                    {{ manufacturer.manufacturer_name }}
-                    {% endif %}
-                </td>
-                <td>
+                <td style="border: 4px solid white;">{{ manufacturer.manufacturer_id }}</td>
+                <td style="border: 4px solid white;">{{ manufacturer.manufacturer_name }}</td>
+                <td style="border: 4px solid white;">
                     <button type="button" onclick="deleteManufacturer({{ manufacturer.manufacturer_id }})">Удалить</button>
                 </td>
             </tr>
