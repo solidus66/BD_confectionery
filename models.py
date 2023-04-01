@@ -24,7 +24,6 @@ class Manufacturer(db.Model):
 class Color(db.Model):
     __tablename__ = 'color'
     color_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    # wrapper_id = db.Column(db.Integer, db.ForeignKey('Wrapper.wrapper_id', ondelete='CASCADE'))
     color_name = db.Column(db.String(50), nullable=False)
 
     def __str__(self):
@@ -35,8 +34,9 @@ class Wrapper(db.Model):
     __tablename__ = 'wrapper'
     wrapper_id = db.Column(db.Integer, primary_key=True, nullable=False)
     color_id = db.Column(db.Integer, db.ForeignKey('color.color_id'), nullable=False)
+    size = db.Column(db.String(50), nullable=False)
 
-    # size = db.Column(db.String(50), nullable=False)
+    color_name = db.relationship('Color', backref='wrapper', uselist=False)
 
     def __str__(self):
         return f"{self.color.name} wrapper"
@@ -56,10 +56,10 @@ class Product(db.Model):
     manufacturer_id = db.Column(db.Integer, db.ForeignKey('manufacturer.manufacturer_id'), nullable=False)
     product_name = db.Column(db.String(100), nullable=False)
     product_price = db.Column(db.Numeric(10, 2), nullable=False)
-    # wrapper_id = db.Column(db.Integer, db.ForeignKey('wrapper.wrapper_id', ondelete='CASCADE'), nullable=True)
+    wrapper_id = db.Column(db.Integer, db.ForeignKey('wrapper.wrapper_id'), nullable=True)
     manufacturer = db.relationship('Manufacturer', backref='products')
 
-    # color_id = db.relationship('Wrapper', backref='products', uselist=False)
+    wrapper = db.relationship('Wrapper', backref='products', uselist=False)
 
     def __str__(self):
         return self.product_name
