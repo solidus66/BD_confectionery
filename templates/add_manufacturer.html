@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Добавление производителя</title>
-  </head>
-  <body>
-    <a href="{{ url_for('view_manufacturers') }}">Назад к списку производителей</a>
-    <h1>Добавить производителя</h1>
-    <form method="POST">
-      <label for="manufacturer_name">Название:</label>
-      <input type="text" id="manufacturer_name" name="manufacturer_name" required>
-      <br>
-      <button type="submit">Добавить</button>
-    </form>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Добавление производителя</title>
+</head>
+
+<body>
+  <a href="{{ url_for('view_manufacturers') }}">Назад к списку производителей</a>
+  <h1>Добавить производителя</h1>
+  <form method="POST">
+    <label for="manufacturer_name">Название:</label>
+    <input type="text" id="manufacturer_name" name="manufacturer_name" required>
+    <br>
+    <br>
+    <button type="submit">Добавить</button>
+  </form>
+</body>
+
 </html>

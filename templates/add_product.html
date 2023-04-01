@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление продукции</title>
+</head>
+
+<body>
+    <a href="{{ url_for('view_products') }}">Назад к списку продукции</a>
+    <h1>Добавить продукцию</h1>
+    <form method="POST">
+        <label for="product_name">Название продукции:</label>
+        <input type="text" id="product_name" name="product_name" required>
+        <br>
+        <br>
+        <label>Цена продукции:</label>
+        <input type="numeric" id="product_price" name="product_price" required min="0">
+        <br>
+        <br>
+        <label>Производитель:</label>
+        <select name="manufacturer_id">
+            {% for manufacturer in manufacturers %}
+            <option value="{{ manufacturer.manufacturer_id }}" {% if manufacturer.manufacturer_id==form.manufacturer_id
+                %}selected{% endif %}>{{ manufacturer.manufacturer_id }} - {{ manufacturer.manufacturer_name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <br>
+        <input type="submit" value="Добавить">
+    </form>
+</body>
+
+</html>

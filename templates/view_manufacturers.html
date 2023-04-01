@@ -13,6 +13,7 @@
         <input type="text" name="search" placeholder="Поиск по названию">
         <input type="submit" value="Найти">
         <br>
+        <br>
         <label>Сортировать по:</label>
         <select name="sort_by">
             <option value="">ID производителя (по умолчанию)</option>
@@ -21,15 +22,18 @@
         </select>
         <input type="submit" value="Применить">
         <br>
+        <br>
         <a href="{{ url_for('add_manufacturer') }}">Добавить производителя</a>
+        <br>
+        <br>
     </form>
     <table>
         {% if manufacturers %}
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>Действия</th>
+                <th style="border: 4px solid white;">ID</th>
+                <th style="border: 4px solid white;">Название</th>
+                <th style="border: 4px solid white;">Действия</th>
             </tr>
         </thead>
         {% endif %}
@@ -39,22 +43,10 @@
             {% endif %}
             {% for manufacturer in manufacturers %}
             <tr>
-                <td>{{ manufacturer.manufacturer_id }}</td>
-                <td>
-                    {% if manufacturer.edit %}
-                    <input type="text" name="manufacturer_name" value="{{ manufacturer.manufacturer_name }}">
-                    {% else %}
-                    {{ manufacturer.manufacturer_name }}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if manufacturer.edit %}
-                    <button type="button" onclick="saveManufacturer({{ manufacturer.manufacturer_id }})">Сохранить</button>
-                    <button type="button" onclick="cancelEdit({{ manufacturer.manufacturer_id }})">Отмена</button>
-                    {% else %}
-                    <button type="button" onclick="editManufacturer({{ manufacturer.manufacturer_id }})">Изменить</button>
+                <td style="border: 4px solid white;">{{ manufacturer.manufacturer_id }}</td>
+                <td style="border: 4px solid white;">{{ manufacturer.manufacturer_name }}</td>
+                <td style="border: 4px solid white;">
                     <button type="button" onclick="deleteManufacturer({{ manufacturer.manufacturer_id }})">Удалить</button>
-                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -68,66 +60,6 @@
     <a href="{{ url_for('index') }}">Назад в меню</a>
 
 <script>
-    function switchEditMode() {
-        var editMode = document.getElementsByName("edit_mode")[0];
-        editMode.value = !editMode.value;
-        location.reload();
-    }
-
-    // function editManufacturer(manufacturer_id) {
-    //     var nameTd = document.getElementById(`name_${manufacturer_id}`);
-    //     var actionsTd = document.getElementById(`actions_${manufacturer_id}`);
-    //     var name = nameTd.textContent.trim();
-    //
-    //     nameTd.innerHTML = `<input type="text" name="name_${manufacturer_id}" value="${name}">`;
-    //     actionsTd.innerHTML = `
-    //         <button onclick="updateManufacturer(${manufacturer_id})">Сохранить</button>
-    //         <button onclick="cancelEditManufacturer(${manufacturer_id})">Отмена</button>
-    //         <button onclick="deleteManufacturer(${manufacturer_id})">Удалить</button>
-    //     `;
-    // }
-
-    function editManufacturer(manufacturer_id) {
-  window.location.href = `/manufacturers/${manufacturer_id}/edit`;
-    }
-
-    function cancelEditManufacturer(manufacturer_id) {
-        var nameTd = document.getElementById(`name_${manufacturer_id}`);
-        var actionsTd = document.getElementById(`actions_${manufacturer_id}`);
-        var name = document.getElementsByName(`name_${manufacturer_id}`)[0].value;
-
-        nameTd.innerHTML = name;
-        actionsTd.innerHTML = `
-            <button onclick="editManufacturer(${manufacturer_id})">Изменить</button>
-            <button onclick="deleteManufacturer(${manufacturer_id})">Удалить</button>
-        `;
-    }
-
-    function updateManufacturer(manufacturer_id) {
-        var nameInput = document.getElementsByName(`name_${manufacturer_id}`)[0];
-        var name = nameInput.value.trim();
-
-        if (name === "") {
-            alert("Введите название производителя");
-            return;
-        }
-
-        fetch(`/manufacturers/${manufacturer_id}`, {
-            method: "PUT",
-            body: JSON.stringify({name: name}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                location.reload();
-            } else {
-                alert("Не удалось обновить производителя");
-            }
-        });
-    }
-
 function deleteManufacturer(manufacturer_id) {
     if (confirm('Вы уверены, что хотите удалить этого производителя?')) {
         fetch(`/delete_manufacturer/${manufacturer_id}`, {
@@ -146,71 +78,3 @@ function deleteManufacturer(manufacturer_id) {
     }
 }
 </script>
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Просмотр производителей</title>-->
-<!--</head>-->
-
-<!--<body>-->
-<!--    <h1>Производители:</h1>-->
-<!--    <form action="{{ url_for('view_manufacturers') }}" method="get">-->
-<!--        <input type="text" name="search" placeholder="Поиск по названию">-->
-<!--        <input type="submit" value="Найти">-->
-<!--        <br>-->
-<!--        <label>Сортировать по:</label>-->
-<!--        <select name="sort_by">-->
-<!--            <option value="">ID производителя (по умолчанию)</option>-->
-<!--            <option value="manufacturer_name" {% if sort_by=='manufacturer_name' %}selected{% endif %}>Названию-->
-<!--                производителя</option>-->
-<!--        </select>-->
-<!--        <input type="submit" value="Применить">-->
-<!--        <br>-->
-<!--        <a href="{{ url_for('index') }}">Назад в меню</a>-->
-<!--    </form>-->
-<!--    <table>-->
-<!--        {% if manufacturers %}-->
-<!--        <thead>-->
-<!--            <tr>-->
-<!--                <th>ID</th>-->
-<!--                <th>Название</th>-->
-<!--            </tr>-->
-<!--        </thead>-->
-<!--        {% endif %}-->
-<!--        <tbody>-->
-<!--            {% if search_term %}-->
-<!--            <p>Результаты поиска для "{{ search_term }}":</p>-->
-<!--            {% for manufacturer in manufacturers %}-->
-<!--            <tr>-->
-<!--                <td>{{ manufacturer.manufacturer_id }}</td>-->
-<!--                <td>{{ manufacturer.manufacturer_name }}</td>-->
-<!--            </tr>-->
-<!--            {% else %}-->
-<!--            <p>Ничего не найдено.</p>-->
-<!--            <a href="{{ url_for('view_manufacturers') }}">Показать всех производителей</a>-->
-<!--            {% endfor %}-->
-<!--            {% else %}-->
-<!--            {% if manufacturers %}-->
-<!--            {% for manufacturer in manufacturers %}-->
-<!--            <tr>-->
-<!--                <td>{{ manufacturer.manufacturer_id }}</td>-->
-<!--                <td>{{ manufacturer.manufacturer_name }}</td>-->
-<!--            </tr>-->
-<!--            {% endfor %}-->
-<!--            {% else %}-->
-<!--            <tr>-->
-<!--                <td colspan="2">Ничего не найдено.</td>-->
-<!--            </tr>-->
-<!--            {% endif %}-->
-<!--            {% endif %}-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--    <a href="{{ url_for('index') }}">Назад в меню</a>-->
-<!--</body>-->
-
-<!--</html>-->
